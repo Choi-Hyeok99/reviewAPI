@@ -1,13 +1,14 @@
 package com.sparta.sparta_reviewapi.product.repository;
 
+import com.sparta.sparta_reviewapi.product.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+
 
 @Repository
-public class ProductRepository {
-    public Optional<ProductRepository> findById(Long productId) {
-    return null;
+public interface ProductRepository extends JpaRepository<Product,Long> {
+
 
     }
-}
+
