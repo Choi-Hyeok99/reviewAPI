@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0.36            # MySQL 이미지 버전
+    container_name: sparta_mysql   # 컨테이너 이름
+    ports:
+      - "3306:3306"                # 로컬 포트와 컨테이너 포트 매핑
+    environment:
+      MYSQL_ROOT_PASSWORD: a12345678  # 루트 비밀번호
+      MYSQL_DATABASE: review_db          # 초기 생성할 데이터베이스 이름
+      MYSQL_USER: user                   # 사용자 계정
+      MYSQL_PASSWORD: b12345678           # 사용자 비밀번호
+    volumes:
+      - mysql_data:/var/lib/mysql        # 영구 저장소 설정
+    restart: always                      # 컨테이너 자동 재시작
+
+volumes:
+  mysql_data:
