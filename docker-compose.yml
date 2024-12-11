@@ -2,9 +2,9 @@ version: '3.8'
 services:
   mysql:
     image: mysql:8.0.36            # MySQL 이미지 버전
-    container_name: sparta   # 컨테이너 이름
+    container_name: sparta_mysql   # 컨테이너 이름
     ports:
-      - "3306:3306"                # 로컬 포트와 컨테이너 포트 매핑
+      - "3310:3306"                # 로컬 포트와 컨테이너 포트 매핑
     environment:
       MYSQL_ROOT_PASSWORD: a12345678  # 루트 비밀번호
       MYSQL_DATABASE: review_db          # 초기 생성할 데이터베이스 이름
