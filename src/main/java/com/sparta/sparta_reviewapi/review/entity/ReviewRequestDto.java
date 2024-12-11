@@ -7,7 +7,7 @@ public class ReviewRequestDto {
 
     private Long userId;
     private Long productId;
-    private Float score;
+    private int score;
     private String content;
 
 }
