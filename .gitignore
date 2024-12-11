@@ -38,3 +38,6 @@ out/
 
 # Local environment configuration
 src/main/resources/application.yml
+
+# docker
+docker-compose.yml
