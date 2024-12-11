@@ -13,13 +13,12 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    // 리뷰 등록
     @PostMapping
-    public ReviewResponseDto createReview(@PathVariable("productId") Long productId,
-                                          @ModelAttribute ReviewRequestDto requestDto){
-
-        return reviewService.createReview(productId,requestDto);
+    public ReviewResponseDto createReview(@PathVariable Long productId,
+                                          @RequestBody ReviewRequestDto requestDto) {
+        return reviewService.createReview(productId, requestDto);
     }
+}
 
     // 리뷰 조회
-}
+
