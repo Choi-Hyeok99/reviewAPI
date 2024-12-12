@@ -2,21 +2,27 @@ package com.sparta.sparta_reviewapi.product.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "product")
-@Data
+@Setter
+@Getter
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "review_count", nullable = false)
+    @Column(name = "reviewcount", nullable = false)
     private Long reviewCount = 0L; // 리뷰 총 개수
     @Column(nullable = false)
     private Float score = 0.0f; // 상품의 평균 점수
 
 
+    public void updateReview(long newReviewCount, float newScore) {
+        this.reviewCount = newReviewCount;
+        this.score = newScore;
+    }
 }
