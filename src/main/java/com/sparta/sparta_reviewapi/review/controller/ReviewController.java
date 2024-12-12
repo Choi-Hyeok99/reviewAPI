@@ -27,13 +27,10 @@ public class ReviewController {
     // 리뷰 조회
     @GetMapping
     public ReviewListResponseDto getReviews(@PathVariable Long productId,
-                                            @RequestParam(defaultValue = "0")int page,
+                                            @RequestParam(defaultValue = "0")Long cursor, // 커서 값
                                             @RequestParam(defaultValue = "10")int size){
 
-        // 페이지네이션을 위한 Pageable 객체 생성
-        Pageable pageable = Pageable.ofSize(size).withPage(page);
-
-        return reviewService.getReviews(productId, PageRequest.of(page, size));
+        return reviewService.getReviews(productId,cursor, size);
     }
 }
 

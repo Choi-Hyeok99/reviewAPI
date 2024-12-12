@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review,Long> {
     Page<Review> findByProductId(Long productId, Pageable pageable);
+    Page<Review> findByProductIdAndId(Long productId, Long cursor, Pageable pageable);
 }

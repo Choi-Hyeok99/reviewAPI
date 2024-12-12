@@ -12,7 +12,9 @@ import com.sparta.sparta_reviewapi.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,11 +61,21 @@ public class ReviewService {
         );
     }
 
-    public ReviewListResponseDto getReviews(Long productId, Pageable pageable) {
-        // 상품 ID에 맞는 리뷰를 페이지네이션으로 조회
-        Page<Review> reviewPage = reviewRepository.findByProductId(productId, pageable);
+    public ReviewListResponseDto getReviews(Long productId, Long cursor,int size) {
+        // 커서 기반으로 리뷰 조회
+        Pageable pageable = PageRequest.of(0,size, Sort.by(Sort.Order.asc("id")));
 
-        // 리뷰 목록을 ReviewResponseDto로 변환
+        // 커서가 0이면 처음부터, 아니면 cursor보다 큰 리뷰 가져오기
+        Page<Review> reviewPage;
+        if (cursor == 0){
+            reviewPage = reviewRepository.findByProductId(productId,pageable);
+        } else {
+            reviewPage = reviewRepository.findByProductIdAndId(productId,cursor,pageable);
+        }
+
+
+
+        // ReviewResponseDto 반환
         List<ReviewResponseDto> reviews = reviewPage.getContent().stream()
                                                     .map(review -> new ReviewResponseDto(
                                                             "리뷰 조회 성공",
@@ -82,12 +94,13 @@ public class ReviewService {
                                     .average()
                                     .orElse(0.0);
 
+        Long nextCursor = reviewPage.hasNext() ? reviewPage.getContent().get(reviewPage.getContent().size()-1).getId() : null;
+
         // ReviewListResponseDto
         return new ReviewListResponseDto(
                 totalCount,                   // 총 리뷰 수
-                avgScore,                     // 평균 점수
-                pageable.getPageSize(),       // 페이지 크기
-                pageable.getPageNumber(),     // 현재 페이지 번호
+                avgScore,
+                nextCursor,
                 reviews                       // 리뷰 목록
         );
 
