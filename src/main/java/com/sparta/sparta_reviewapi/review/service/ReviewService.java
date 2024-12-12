@@ -38,7 +38,19 @@ public class ReviewService {
         // 4. 리뷰 저장
         reviewRepository.save(review);
 
-// 4. ResponseDto 반환
+        // 5. 리뷰 카운트 증가
+        product.setReviewCount(product.getReviewCount()+1);
+
+        // 6. score 평균 계산
+        float newScore = (product.getScore() * product.getReviewCount() + requestDto.getScore()) / (product.getReviewCount() + 1);
+        product.setScore(newScore);
+
+        // 7. 저장
+        productRepository.save(product);
+        productRepository.flush();
+
+
+        // 8. ResponseDto 반환
         return new ReviewResponseDto(
                 "리뷰가 성공적으로 등록되었습니다.",
                 productId,
