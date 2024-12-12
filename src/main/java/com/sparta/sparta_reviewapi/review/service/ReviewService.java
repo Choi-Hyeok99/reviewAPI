@@ -42,8 +42,9 @@ public class ReviewService {
         Product product = productRepository.findById(productId)
                                            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
 
-        User user = userRepository.findById(requestDto.getUserId())
-                                  .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+
+        User user = getOrCreateUser(requestDto.getUserId());
+
 
         // 이미지 URL 저장
         String imageUrl = null;
@@ -124,5 +125,11 @@ public class ReviewService {
         }
         return "/images/" + fileName;
     }
-
+    public User getOrCreateUser(Long userId) {
+        return userRepository.findById(userId)
+                             .orElseGet(() -> {
+                                 User newUser = new User();
+                                 return userRepository.save(newUser); // 데이터베이스에 저장
+                             });
+    }
 }
