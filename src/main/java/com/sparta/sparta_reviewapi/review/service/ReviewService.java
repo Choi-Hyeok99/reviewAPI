@@ -18,9 +18,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,14 +38,21 @@ public class ReviewService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ResponseEntity<Void> createReview(Long productId, ReviewRequestDto requestDto) {
+    public ResponseEntity<Void> createReview(Long productId, ReviewRequestDto requestDto, MultipartFile image) {
         Product product = productRepository.findById(productId)
                                            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
 
         User user = userRepository.findById(requestDto.getUserId())
                                   .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
-        Review review = new Review(product, user, requestDto.getScore(), requestDto.getContent());
+        // 이미지 URL 저장
+        String imageUrl = null;
+        if (image != null && !image.isEmpty()) {
+            imageUrl = saveImage(image);
+        }
+
+        // Review 객체 생성
+        Review review = new Review(product, user, requestDto.getScore(), requestDto.getContent(), imageUrl);
         reviewRepository.save(review);
 
         // 리뷰 통계 업데이트
@@ -49,10 +61,9 @@ public class ReviewService {
         product.updateReview(newReviewCount, newScore);
         productRepository.save(product);
 
-
         return ResponseEntity.noContent().build();
-
     }
+
 
     public ReviewListResponseDto getReviews(Long productId, Long cursor,int size) {
         // 커서 기반으로 리뷰 조회
@@ -94,6 +105,24 @@ public class ReviewService {
                 nextCursor,
                 reviews                       // 리뷰 목록
         );
-
     }
+    public String saveImage(MultipartFile image){
+        // 파일 이름 생성
+        String fileName = UUID.randomUUID()
+                       .toString() + "_" + image.getOriginalFilename();
+        String filePath = "src/main/resources/static/images" + fileName;
+
+        File directory = new File("src/main/resources/static/images");
+        if (!directory.exists()) {
+            directory.mkdirs(); // 디렉토리 생성
+        }
+
+        try{
+            Files.copy(image.getInputStream(), Paths.get(filePath));
+        } catch (IOException e){
+            throw new RuntimeException("이미지 저장에 실패했습니다.",e);
+        }
+        return "/images/" + fileName;
+    }
+
 }

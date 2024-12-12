@@ -40,11 +40,11 @@ public class Review {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Review(Product product, User user, Float score, String content) {
+    public Review(Product product, User user, Float score, String content,String imageUrl) {
         this.product = product;
         this.user = user;
         this.score = score;
         this.content = content;
-        this.imageUrl = "/image.png";
+        this.imageUrl = imageUrl;
     }
 }
