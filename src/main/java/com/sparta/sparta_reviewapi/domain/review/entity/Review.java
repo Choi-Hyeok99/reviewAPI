@@ -1,7 +1,7 @@
-package com.sparta.sparta_reviewapi.review.entity;
+package com.sparta.sparta_reviewapi.domain.review.entity;
 
-import com.sparta.sparta_reviewapi.product.entity.Product;
-import com.sparta.sparta_reviewapi.user.entity.User;
+import com.sparta.sparta_reviewapi.domain.product.entity.Product;
+import com.sparta.sparta_reviewapi.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
-package com.sparta.sparta_reviewapi.product.repository;
+package com.sparta.sparta_reviewapi.domain.product.repository;
 
-import com.sparta.sparta_reviewapi.product.entity.Product;
+import com.sparta.sparta_reviewapi.domain.product.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,11 +1,10 @@
-package com.sparta.sparta_reviewapi.review.controller;
+package com.sparta.sparta_reviewapi.domain.review.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.sparta_reviewapi.review.entity.ReviewListResponseDto;
-import com.sparta.sparta_reviewapi.review.entity.ReviewRequestDto;
-import com.sparta.sparta_reviewapi.review.service.ReviewService;
-import jakarta.validation.Valid;
+import com.sparta.sparta_reviewapi.domain.review.dto.ReviewListResponseDto;
+import com.sparta.sparta_reviewapi.domain.review.dto.ReviewRequestDto;
+import com.sparta.sparta_reviewapi.domain.review.service.ReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

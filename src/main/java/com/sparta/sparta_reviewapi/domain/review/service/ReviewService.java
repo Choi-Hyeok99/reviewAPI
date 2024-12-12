@@ -1,14 +1,14 @@
-package com.sparta.sparta_reviewapi.review.service;
+package com.sparta.sparta_reviewapi.domain.review.service;
 
-import com.sparta.sparta_reviewapi.product.entity.Product;
-import com.sparta.sparta_reviewapi.product.repository.ProductRepository;
-import com.sparta.sparta_reviewapi.review.entity.Review;
-import com.sparta.sparta_reviewapi.review.entity.ReviewListResponseDto;
-import com.sparta.sparta_reviewapi.review.entity.ReviewRequestDto;
-import com.sparta.sparta_reviewapi.review.entity.ReviewResponseDto;
-import com.sparta.sparta_reviewapi.review.repository.ReviewRepository;
-import com.sparta.sparta_reviewapi.user.entity.User;
-import com.sparta.sparta_reviewapi.user.repository.UserRepository;
+import com.sparta.sparta_reviewapi.domain.product.entity.Product;
+import com.sparta.sparta_reviewapi.domain.product.repository.ProductRepository;
+import com.sparta.sparta_reviewapi.domain.review.dto.ReviewListResponseDto;
+import com.sparta.sparta_reviewapi.domain.review.dto.ReviewResponseDto;
+import com.sparta.sparta_reviewapi.domain.review.entity.Review;
+import com.sparta.sparta_reviewapi.domain.review.dto.ReviewRequestDto;
+import com.sparta.sparta_reviewapi.domain.review.repository.ReviewRepository;
+import com.sparta.sparta_reviewapi.domain.user.entity.User;
+import com.sparta.sparta_reviewapi.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -66,7 +66,7 @@ public class ReviewService {
     }
 
 
-    public ReviewListResponseDto getReviews(Long productId, Long cursor,int size) {
+    public ReviewListResponseDto getReviews(Long productId, Long cursor, int size) {
         // 커서 기반으로 리뷰 조회
         Pageable pageable = PageRequest.of(0,size, Sort.by(Sort.Order.desc("id")));
 

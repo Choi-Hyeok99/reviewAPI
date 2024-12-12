@@ -1,4 +1,4 @@
-package com.sparta.sparta_reviewapi.product.entity;
+package com.sparta.sparta_reviewapi.domain.product.entity;
 
 
 import jakarta.persistence.*;
