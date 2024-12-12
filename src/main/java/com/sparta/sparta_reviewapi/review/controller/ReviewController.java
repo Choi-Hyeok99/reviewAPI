@@ -4,6 +4,7 @@ import com.sparta.sparta_reviewapi.review.entity.ReviewListResponseDto;
 import com.sparta.sparta_reviewapi.review.entity.ReviewRequestDto;
 import com.sparta.sparta_reviewapi.review.entity.ReviewResponseDto;
 import com.sparta.sparta_reviewapi.review.service.ReviewService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,7 @@ public class ReviewController {
 
     @PostMapping
     public ResponseEntity<Void> createReview(@PathVariable Long productId,
-                                               @RequestBody ReviewRequestDto requestDto) {
+                                             @Valid @RequestBody ReviewRequestDto requestDto) {
         reviewService.createReview(productId, requestDto);
         return ResponseEntity.noContent().build();
     }
