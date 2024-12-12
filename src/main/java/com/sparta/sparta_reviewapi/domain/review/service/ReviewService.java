@@ -111,9 +111,9 @@ public class ReviewService {
         // 파일 이름 생성
         String fileName = UUID.randomUUID()
                        .toString() + "_" + image.getOriginalFilename();
-        String filePath = "src/main/resources/static/images" + fileName;
+        String filePath = "/app/images/" + fileName;  // 도커 컨테이너 내 경로로 변경
 
-        File directory = new File("src/main/resources/static/images");
+        File directory = new File("/app/images");
         if (!directory.exists()) {
             directory.mkdirs(); // 디렉토리 생성
         }
