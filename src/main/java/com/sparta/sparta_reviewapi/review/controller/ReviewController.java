@@ -7,6 +7,7 @@ import com.sparta.sparta_reviewapi.review.service.ReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,9 +20,10 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ReviewResponseDto createReview(@PathVariable Long productId,
-                                          @RequestBody ReviewRequestDto requestDto) {
-        return reviewService.createReview(productId, requestDto);
+    public ResponseEntity<Void> createReview(@PathVariable Long productId,
+                                               @RequestBody ReviewRequestDto requestDto) {
+        reviewService.createReview(productId, requestDto);
+        return ResponseEntity.noContent().build();
     }
 
     // 리뷰 조회

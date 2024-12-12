@@ -2,6 +2,8 @@ package com.sparta.sparta_reviewapi.review.entity;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Data
@@ -14,7 +16,7 @@ public class ReviewListResponseDto {
     // 생성자 추가
     public ReviewListResponseDto(Long totalCount, Double score, Long cursor, List<ReviewResponseDto> reviews) {
         this.totalCount = totalCount;
-        this.score = score;
+        this.score = new BigDecimal(score).setScale(1, RoundingMode.HALF_UP).doubleValue();
         this.cursor = cursor;
         this.reviews = reviews;
     }

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +33,7 @@ public class ReviewService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ReviewResponseDto createReview(Long productId, ReviewRequestDto requestDto) {
+    public ResponseEntity<Void> createReview(Long productId, ReviewRequestDto requestDto) {
         Product product = productRepository.findById(productId)
                                            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
 
@@ -48,22 +49,14 @@ public class ReviewService {
         product.updateReview(newReviewCount, newScore);
         productRepository.save(product);
 
-        log.info("리뷰 생성 완료: productId={}, reviewId={}, newReviewCount={}, newScore={}",
-                productId, review.getId(), newReviewCount, newScore);
 
-        return new ReviewResponseDto(
-                "리뷰가 성공적으로 등록되었습니다.",
-                productId,
-                requestDto.getUserId(),
-                requestDto.getScore(),
-                requestDto.getContent(),
-                LocalDateTime.now()
-        );
+        return ResponseEntity.noContent().build();
+
     }
 
     public ReviewListResponseDto getReviews(Long productId, Long cursor,int size) {
         // 커서 기반으로 리뷰 조회
-        Pageable pageable = PageRequest.of(0,size, Sort.by(Sort.Order.asc("id")));
+        Pageable pageable = PageRequest.of(0,size, Sort.by(Sort.Order.desc("id")));
 
         // 커서가 0이면 처음부터, 아니면 cursor보다 큰 리뷰 가져오기
         Page<Review> reviewPage;
@@ -73,16 +66,14 @@ public class ReviewService {
             reviewPage = reviewRepository.findByProductIdAndId(productId,cursor,pageable);
         }
 
-
-
         // ReviewResponseDto 반환
         List<ReviewResponseDto> reviews = reviewPage.getContent().stream()
                                                     .map(review -> new ReviewResponseDto(
-                                                            "리뷰 조회 성공",
-                                                            review.getProduct().getId(),
+                                                            review.getId(),
                                                             review.getUser().getId(),
                                                             review.getScore(),
                                                             review.getContent(),
+                                                            review.getImageUrl(),
                                                             review.getCreatedAt()
                                                     ))
                                                     .collect(Collectors.toList());
