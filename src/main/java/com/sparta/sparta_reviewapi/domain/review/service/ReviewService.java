@@ -12,6 +12,7 @@ import com.sparta.sparta_reviewapi.domain.user.entity.User;
 import com.sparta.sparta_reviewapi.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,30 +41,35 @@ public class ReviewService {
 
     @Transactional
     public ResponseEntity<Void> createReview(Long productId, ReviewRequestDto requestDto, MultipartFile image) {
-        Product product = productRepository.findById(productId)
-                                           .orElseThrow(() -> new ResourceNotFoundException("상품을 찾을 수 없습니다."));
+        try {
+            Product product = productRepository.findById(productId)
+                                               .orElseThrow(() -> new ResourceNotFoundException("상품을 찾을 수 없습니다."));
 
 
-        User user = getOrCreateUser(requestDto.getUserId());
+            User user = getOrCreateUser(requestDto.getUserId());
 
 
-        // 이미지 URL 저장
-        String imageUrl = null;
-        if (image != null && !image.isEmpty()) {
-            imageUrl = saveImage(image);
+            // 이미지 URL 저장
+            String imageUrl = null;
+            if (image != null && !image.isEmpty()) {
+                imageUrl = saveImage(image);
+            }
+
+            // Review 객체 생성
+            Review review = new Review(product, user, requestDto.getScore(), requestDto.getContent(), imageUrl);
+            reviewRepository.save(review);
+
+            // 리뷰 통계 업데이트
+            long newReviewCount = product.getReviewCount() + 1;
+            float newScore = (product.getScore() * product.getReviewCount() + requestDto.getScore()) / newReviewCount;
+            product.updateReview(newReviewCount, newScore);
+            productRepository.save(product);
+
+            return ResponseEntity.noContent()
+                                 .build();
+        }catch (OptimisticLockingFailureException e){
+            throw new RuntimeException("동시성 문제 발생 : 다시 시도해주세요.",e);
         }
-
-        // Review 객체 생성
-        Review review = new Review(product, user, requestDto.getScore(), requestDto.getContent(), imageUrl);
-        reviewRepository.save(review);
-
-        // 리뷰 통계 업데이트
-        long newReviewCount = product.getReviewCount() + 1;
-        float newScore = (product.getScore() * product.getReviewCount() + requestDto.getScore()) / newReviewCount;
-        product.updateReview(newReviewCount, newScore);
-        productRepository.save(product);
-
-        return ResponseEntity.noContent().build();
     }
 
 

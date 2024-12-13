@@ -1,6 +1,7 @@
 package com.sparta.sparta_reviewapi.common.exception;
 
 
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,7 +21,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidData(InvalidDataException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
-
+    // 낙관적 락 예외 처리
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ResponseEntity<String> handleOptimisticLockingFailure(OptimisticLockingFailureException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                             .body("다른 사용자가 이미 요청을 처리 중입니다. 다시 시도해주세요.");
+    }
     // 일반적인 예외 처리
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {

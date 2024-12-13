@@ -40,6 +40,9 @@ public class Review {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Version
+    private Integer version; // 낙관적 락을 위한 필드
+
     public Review(Product product, User user, Float score, String content,String imageUrl) {
         this.product = product;
         this.user = user;
