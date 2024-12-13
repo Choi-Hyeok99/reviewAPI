@@ -1,5 +1,6 @@
 package com.sparta.sparta_reviewapi.domain.review.service;
 
+import com.sparta.sparta_reviewapi.common.exception.ResourceNotFoundException;
 import com.sparta.sparta_reviewapi.domain.product.entity.Product;
 import com.sparta.sparta_reviewapi.domain.product.repository.ProductRepository;
 import com.sparta.sparta_reviewapi.domain.review.dto.ReviewListResponseDto;
@@ -40,7 +41,7 @@ public class ReviewService {
     @Transactional
     public ResponseEntity<Void> createReview(Long productId, ReviewRequestDto requestDto, MultipartFile image) {
         Product product = productRepository.findById(productId)
-                                           .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+                                           .orElseThrow(() -> new ResourceNotFoundException("상품을 찾을 수 없습니다."));
 
 
         User user = getOrCreateUser(requestDto.getUserId());

@@ -2,6 +2,7 @@ package com.sparta.sparta_reviewapi.domain.review.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.sparta_reviewapi.common.exception.InvalidDataException;
 import com.sparta.sparta_reviewapi.domain.review.dto.ReviewListResponseDto;
 import com.sparta.sparta_reviewapi.domain.review.dto.ReviewRequestDto;
 import com.sparta.sparta_reviewapi.domain.review.service.ReviewService;
@@ -28,7 +29,7 @@ public class ReviewController {
         try {
             requestDto = objectMapper.readValue(reviewJson, ReviewRequestDto.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Invalid JSON format for review", e);
+            throw new InvalidDataException("리뷰 JSON 데이터 형식이 잘못되었습니다.");
         }
 
         reviewService.createReview(productId, requestDto, image);
