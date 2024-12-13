@@ -68,7 +68,7 @@ public class ReviewService {
 
     public ReviewListResponseDto getReviews(Long productId, Long cursor, int size) {
         // 커서 기반으로 리뷰 조회
-        Pageable pageable = PageRequest.of(0,size, Sort.by(Sort.Order.desc("id")));
+        Pageable pageable = PageRequest.of(0,size, Sort.by(Sort.Order.desc("createdAt")));
 
         // 커서가 0이면 처음부터, 아니면 cursor보다 큰 리뷰 가져오기
         Page<Review> reviewPage;
@@ -111,9 +111,9 @@ public class ReviewService {
         // 파일 이름 생성
         String fileName = UUID.randomUUID()
                        .toString() + "_" + image.getOriginalFilename();
-        String filePath = "/app/images/" + fileName;  // 도커 컨테이너 내 경로로 변경
+        String filePath = "/app/static/images/" + fileName;  // 도커 컨테이너 내 경로로 변경
 
-        File directory = new File("/app/images");
+        File directory = new File("/app/static/images/");
         if (!directory.exists()) {
             directory.mkdirs(); // 디렉토리 생성
         }
